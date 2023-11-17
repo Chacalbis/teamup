@@ -13,10 +13,13 @@ def unique_group(iterable, k, n, groups=0):
         for rest in unique_group(pool.difference(combination), k, n, groups + 1):
             yield [combination, *rest]
 
+def weightedSkill(technicalNote, enduranceNote, goalNote):
+    return round((technicalNote * 5 + enduranceNote * 5 + goalNote) / 11, 1)
 
-def variance(groups):
+
+def gap(groups):
     total_skills = [sum(player_skills[player] for player in group) for group in groups]
-    return max(total_skills) - min(total_skills)
+    return round(total_skills[0] - total_skills[1], 1)
     
 
 if __name__ == "__main__":
@@ -29,11 +32,12 @@ if __name__ == "__main__":
             type=int, help="The size of the teams.")
     args = parser.parse_args()
 
-    players = yaml.load(open(args.players, 'rt'))
+    players = yaml.load(open(args.players, 'rt'), Loader=yaml.FullLoader)
 
-    players = sorted(players, key=lambda k: k['skill'])
+    players = sorted(players, key=lambda k: weightedSkill(k['technicalNote'], k['enduranceNote'], k['goalNote']))
 
-    player_skills = {player['name']: player['skill'] for player in players}
+    player_skills = {player['name']: weightedSkill(player['technicalNote'], player['enduranceNote'], player['goalNote']) for player in players}
+    # print(player_skills)
 
     i = 0
     for grouping in unique_group(player_skills, args.numteams, args.teamsize):
@@ -41,9 +45,10 @@ if __name__ == "__main__":
         if i % 100000 == 0:
             sys.stdout.write('.')
             sys.stdout.flush()
-        if variance(grouping) < last_best:
-            last_best = variance(grouping)
+        if gap(grouping) < last_best:
+            last_best = gap(grouping)
             print("")
-            print(f"Variance: {variance(grouping)}")
+            print(f"Ecart: {gap(grouping)}")
             print("============")
             print(grouping)
+            print("============")

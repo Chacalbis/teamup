@@ -13,8 +13,8 @@ def unique_group(iterable, k, n, groups=0):
         for rest in unique_group(pool.difference(combination), k, n, groups + 1):
             yield [combination, *rest]
 
-def weightedSkill(technicalNote, enduranceNote, goalNote):
-    return round((technicalNote * 5 + enduranceNote * 5 + goalNote) / 11, 1)
+def weightedSkill(technicalNote, enduranceNote, goalNote, teamsize):
+    return round((teamsize * (technicalNote + enduranceNote) + goalNote) / (teamsize * 2 + 1), 1)
 
 
 def gap(groups):
@@ -34,10 +34,10 @@ if __name__ == "__main__":
 
     players = yaml.load(open(args.players, 'rt'), Loader=yaml.FullLoader)
 
-    players = sorted(players, key=lambda k: weightedSkill(k['technicalNote'], k['enduranceNote'], k['goalNote']))
+    players = sorted(players, key=lambda k: weightedSkill(k['technicalNote'], k['enduranceNote'], k['goalNote'], args.teamsize))
 
-    player_skills = {player['name']: weightedSkill(player['technicalNote'], player['enduranceNote'], player['goalNote']) for player in players}
-    # print(player_skills)
+    player_skills = {player['name']: weightedSkill(player['technicalNote'], player['enduranceNote'], player['goalNote'], args.teamsize) for player in players}
+    print(player_skills)
 
     i = 0
     for grouping in unique_group(player_skills, args.numteams, args.teamsize):

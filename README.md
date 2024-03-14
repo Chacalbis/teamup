@@ -1,22 +1,27 @@
 # Team Up
 
 This script programmatically comes up with the best teams based on a yaml file
-of players and skill levels. It was originally developed to come up with teams
-for Christmas Trivia. It is adaptable to nearly anything.
+of players and skills levels. It is adapted to soccer 5 matchmaking.
 
 ## Yaml format
 
 The format of the yaml file must be a list of dictionaries:
 
     - name: <name>
-      skill: <int>
+      technicalNote: <int>
+      enduranceNote: <int>
+      goalNote: <int>
     - name: <name>
-      skill: <int>
+      technicalNote: <int>
+      enduranceNote: <int>
+      goalNote: <int>
     - name: <name>
-      skill: <int>
+      technicalNote: <int>
+      enduranceNote: <int>
+      goalNote: <int>
 
 I have been rating based on 1-10 but the solution should work based on any skill
-rating system, so long as it is an integer.
+rating system, as long as it remains an integer.
 
 ## Command line arguments
 
